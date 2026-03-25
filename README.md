@@ -61,4 +61,4 @@ BOOT & DEBUG
 - Serial console: 115200 baud. Use screen/picocom/minicom.
 - To prevent main.py from auto-running during edits: remove or rename main.py temporarily or use WebREPL/ampy.
 
-If you'd like, I can also generate a printable table without pipes (plain text) or export as wiring.pdf. Confirm which format you prefer.
+
