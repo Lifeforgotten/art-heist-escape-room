@@ -9,7 +9,7 @@ TOUCH_PINS = [4, 27, 14, 13]  # remapped touch pins: keep 4 and 27, avoid ADC pi
 touch_sensors = [TouchPad(Pin(p)) for p in TOUCH_PINS]
 
 # Setup outputs
-STRIP_PIN = 15  # WS2812 LED strip (moved from 23)
+STRIP_PIN = 14  # WS2812 LED strip (14 free; avoid boot strapping)
 GRID_PIN = 13   # WS2812 grid (moved from 22)
 
 if not DRY_RUN:

@@ -27,6 +27,7 @@ WIRING TABLE (one board hosts all 4 scripts)
 | 16  | SERVO_A (laser mirror A)               | PWM OUT    | Orange                |
 | 17  | SERVO_B (laser mirror B)               | PWM OUT    | Orange                |
 | 18  | ENABLE_STEPPER (active low)            | OUT        | Yellow                |
+|     | **WARNING**: GPIO18 also used for NeoPixel STRIP. Ensure only one device drives this pin. |
 | 26  | STEP_DIR (stepper direction)           | OUT        | Brown                 |
 | 22  | STEP_STEP (stepper step)               | OUT        | Brown                 |
 | 12  | HOME_SWITCH (stepper home)             | IN (PULL_UP)| Grey                  |
@@ -40,7 +41,7 @@ WIRING TABLE (one board hosts all 4 scripts)
  (touch module)                      | TOUCH      | Purple                |
 | 13  | TOUCH T?
  (touch module)                      | TOUCH      | Purple                |
-| 15  | NeoPixel STRIP data line               | OUT (1-wire)| White (data)         |
+| 14  | NeoPixel STRIP data line               | OUT (1-wire)| White (data)         |
 | 13  | NeoPixel GRID data line                | OUT (1-wire)| White (data)         |
 | 35  | LIMIT_MAX (input-only)                 | IN         | Grey                  |
 

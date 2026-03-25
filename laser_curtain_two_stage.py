@@ -120,6 +120,11 @@ def disable_servos():
 
 def step_motor(direction, steps):
     global curtain_steps
+    if DRY_RUN:
+        # In DRY_RUN, simulate stepping without touching actual stepper pins
+        print(f"DRY_RUN: would step motor dir={direction} steps={steps}")
+        curtain_steps += steps if direction else -steps
+        return
     STEP_DIR.value(direction)
     for _ in range(steps):
         # Safety checks before each step
