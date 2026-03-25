@@ -18,7 +18,7 @@ DEVICE_ID = "ROOM_BRAIN"  # Identify in UDP mesh
 # UDP Network
 UDP_PORT = 5005
 UDP_BROADCAST = "192.168.4.255"
-HEARTBEAT_INTERVAL_MS = 500
+HEARTBEAT_INTERVAL_MS = 1000
 
 # Puzzle State (master record)
 puzzle_state = {
