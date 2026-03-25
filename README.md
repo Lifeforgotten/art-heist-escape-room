@@ -41,7 +41,7 @@ WIRING TABLE (one board hosts all 4 scripts)
  (touch module)                      | TOUCH      | Purple                |
 | 13  | TOUCH T?
  (touch module)                      | TOUCH      | Purple                |
-| 14  | NeoPixel STRIP data line               | OUT (1-wire)| White (data)         |
+| 18  | NeoPixel STRIP data line               | OUT (1-wire)| White (data)         |
 | 13  | NeoPixel GRID data line                | OUT (1-wire)| White (data)         |
 | 35  | LIMIT_MAX (input-only)                 | IN         | Grey                  |
 
