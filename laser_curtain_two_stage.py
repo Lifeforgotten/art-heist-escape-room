@@ -8,7 +8,8 @@ DRY_RUN = True  # Set False after you verify inputs over serial
 ALLOW_SERVOS_IN_DRY_RUN = True
 
 JOYSTICK_X = ADC(Pin(32))      # X-axis for mirror A (ADC)
-POT_MIRROR = ADC(Pin(33))      # Rotary dial for mirror B (ADC)
+POT_MIRROR = ADC(Pin(36))      # Rotary dial for mirror B (ADC) - moved to GPIO36
+JOYSTICK_SW = Pin(4, Pin.IN, Pin.PULL_UP)  # Joystick button (SW)
 LDR_PIN = ADC(Pin(34))         # Photoresistor at laser target (input-only)
 TOUCH_PAD = TouchPad(Pin(27))  # Capacitive touch (T7)
 
