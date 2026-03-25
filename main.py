@@ -41,9 +41,9 @@ puzzle_state = {
 DRY_RUN = True
 
 # === HARDWARE PINS (Room Brain) ===
-TRIGGER_MAGLOCK_1_PIN = 4
+TRIGGER_MAGLOCK_1_PIN = 5
 TRIGGER_MAGLOCK_2_PIN = 19
-STATUS_LED_PIN = 23
+STATUS_LED_PIN = 23  # keep status LED on 23 (NeoPixel strip moved to 15)
 RESET_BUTTON_PIN = 21
 AUDIO_DAC_PIN = 25
 

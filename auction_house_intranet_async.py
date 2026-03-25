@@ -13,7 +13,8 @@ import select
 # === CONFIGURATION ===
 WIFI_SSID = "AUCTION_HOUSE"
 WIFI_PASSWORD = ""  # Open network for easy player access
-TRIGGER_PIN = 4  # GPIO4 - relay/maglock trigger
+TRIGGER_PIN = 5  # GPIO5 - relay/maglock (remapped from GPIO4)
+# Note: Ensure main.py also remaps TRIGGER_MAGLOCK_1_PIN to 5 trigger
 
 # Puzzle state (simple in-memory tracking)
 puzzle_state = {

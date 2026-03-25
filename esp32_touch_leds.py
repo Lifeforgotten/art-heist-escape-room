@@ -5,12 +5,12 @@ import uasyncio as asyncio
 
 # 4 Touch sensors (using safe pins)
 DRY_RUN = True  # Set False to enable outputs
-TOUCH_PINS = [4, 27, 33, 32]  # T0, T7, T8, T9
+TOUCH_PINS = [4, 27, 14, 13]  # remapped touch pins: keep 4 and 27, avoid ADC pins 32/33; 14 & 13 chosen (check boot strapping and board-specific touch mapping)
 touch_sensors = [TouchPad(Pin(p)) for p in TOUCH_PINS]
 
 # Setup outputs
-STRIP_PIN = 23  # WS2812 LED strip
-GRID_PIN = 22   # WS2812 grid
+STRIP_PIN = 15  # WS2812 LED strip (moved from 23)
+GRID_PIN = 13   # WS2812 grid (moved from 22)
 
 if not DRY_RUN:
     strip = neopixel.NeoPixel(Pin(STRIP_PIN), 30)  # 30 LED strip
