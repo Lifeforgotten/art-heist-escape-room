@@ -206,6 +206,104 @@ async def reset_room():
     print("All systems reset")
     print(f"Reset count: {puzzle_state['room_reset_count']}")
 
+def inventory_page():
+    content = """
+    <h2>📦 Inventory Database</h2>
+    <p>Current estate sale catalog. Search for specific items using the database.</p>
+    
+    <table>
+        <tr>
+            <th>Lot #</th>
+            <th>Item</th>
+            <th>Category</th>
+            <th>Status</th>
+        </tr>
+        <tr>
+            <td>001</td>
+            <td>Victorian Writing Desk</td>
+            <td>Furniture</td>
+            <td>Available</td>
+        </tr>
+        <tr>
+            <td>002</td>
+            <td>Oil Painting - "Sunset Harbor"</td>
+            <td>Art</td>
+            <td>Available</td>
+        </tr>
+        <tr>
+            <td>003</td>
+            <td>Brass Samurai Helmet</td>
+            <td>Antiquities</td>
+            <td><strong>MOVED TO VAULT</strong></td>
+        </tr>
+        <tr>
+            <td>004</td>
+            <td>Crystal Chandelier</td>
+            <td>Lighting</td>
+            <td>Available</td>
+        </tr>
+        <tr>
+            <td>005</td>
+            <td>First Edition Books (Set of 12)</td>
+            <td>Books</td>
+            <td>Available</td>
+        </tr>
+        <tr>
+            <td>006</td>
+            <td>Gold Pocket Watch (1887)</td>
+            <td>Jewelry</td>
+            <td><strong>MOVED TO VAULT</strong></td>
+        </tr>
+        <tr>
+            <td>007</td>
+            <td>Marble Bust - Roman Style</td>
+            <td>Sculpture</td>
+            <td>Available</td>
+        </tr>
+        <tr>
+            <td>008</td>
+            <td>📁 [CLASSIFIED ARTIFACT]</td>
+            <td>Special Collection</td>
+            <td><span style="color: #f44336;">SECURE STORAGE</span></td>
+        </tr>
+    </table>
+    
+    <div class="card">
+        <h3>🔍 Item Details - Lot #008</h3>
+        <p><strong>Access Code:</strong> <span style="font-family: monospace; background: #333; color: #0f0; padding: 5px 10px;">1847</span></p>
+        <p><strong>Location:</strong> Secure Vault, Sector 7</p>
+        <p><strong>Notes:</strong> Requires dual authentication. Contact security desk.</p>
+    </div>
+    """
+    return base_page("Inventory", content)
+
+def security_page():
+    content = """
+    <h2>🔒 Security Systems</h2>
+    <p>Security clearance verification required for vault access.</p>
+    
+    <div class="card">
+        <h3>Security Log - Recent Events</h3>
+        <div class="terminal">
+<pre>[09:47] ALERT: Unauthorized access attempt - East Wing
+[09:52] SYSTEM: Vault lockdown initiated
+[10:15] NOTICE: Security protocols updated
+[10:33] CHECK: Perimeter sensors - NORMAL
+[11:02] AUTH: Field Agent login - GRANTED</pre>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3>🔐 Clearance Verification</h3>
+        <p>Enter the artifact access code from inventory to proceed:</p>
+        <form method="GET" action="/security">
+            <input type="text" name="code" placeholder="Enter code" maxlength="10" style="width: 200px;">
+            <button type="submit" style="width: auto; padding: 12px 30px; margin-left: 10px;">Verify</button>
+        </form>
+    </div>
+    """
+    return base_page("Security", content)
+
 # === WEB SERVER (from auction_house_intranet) ===
 # [Include the base_page, login_page, inventory_page, etc. from auction_house_intranet_async.py]
 # For brevity, placeholder - you'll copy the HTML templates from auction_house_intranet_async.py
@@ -301,18 +399,6 @@ def base_page(title, content, nav=True):
         .status-card.ok {{ border-left-color: #4caf50; }}
         .status-card.warn {{ border-left-color: #ff9800; }}
         .status-card.locked {{ border-left-color: #f44336; }}
-        .reset-btn {{
-            display: inline-block;
-            padding: 15px 30px;
-            background: #f44336;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-        }}
-        .reset-btn:hover {{
-            background: #d32f2f;
-        }}
         @keyframes pulse {{
             0%, 100% {{ opacity: 1; }}
             50% {{ opacity: 0.5; }}
@@ -381,9 +467,6 @@ def status_page():
     
     content += """
     </ul>
-    
-    <h3>⚠️ Master Controls</h3>
-    <a href="/reset" class="reset-btn" onclick="return confirm('Reset entire room?')">🔄 EMERGENCY RESET</a>
     """
     
     return base_page("System Status", content)
@@ -482,26 +565,112 @@ async def http_server():
                 """)
                 response = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n" + html
             
+            elif path == '/inventory':
+                html = inventory_page()
+                response = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n" + html
+            
+            elif path == '/security':
+                code = params.get('code', '')
+                if code == '1847':
+                    puzzle_state['security_cleared'] = True
+                    html = base_page("Security", '''
+                    <h2>🔒 Security Systems</h2>
+                    
+                    <div class="success">✓ Clearance verified. Vault access authorized.</div>
+                    
+                    <div class="card">
+                        <h3>Security Log - Updated</h3>
+                        <div class="terminal">
+<pre>[09:47] ALERT: Unauthorized access attempt - East Wing
+[09:52] SYSTEM: Vault lockdown initiated
+[10:15] NOTICE: Security protocols updated
+[10:33] CHECK: Perimeter sensors - NORMAL
+[11:02] AUTH: Field Agent login - GRANTED
+[<span style="color: #ffff00;">NOW</span>] <span style="color: #00ff00;">CLEARANCE: Vault access authorized</span></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="border-left-color: #4caf50;">
+                        <h3>✓ Authentication Complete</h3>
+                        <p>You may now access the vault. Proceed to the Vault page to complete your mission.</p>
+                        <p style="text-align: center; margin-top: 20px;">
+                            <a href="/vault" style="display: inline-block; padding: 15px 40px; background: #1e3c72; color: white; text-decoration: none; border-radius: 5px; font-size: 16px;">Enter Vault →</a>
+                        </p>
+                    </div>
+                    ''')
+                    response = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n" + html
+                elif code:
+                    html = base_page("Security", '''
+                    <h2>🔒 Security Systems</h2>
+                    
+                    <div class="card">
+                        <h3>Security Log - Recent Events</h3>
+                        <div class="terminal">
+<pre>[09:47] ALERT: Unauthorized access attempt - East Wing
+[09:52] SYSTEM: Vault lockdown initiated
+[10:15] NOTICE: Security protocols updated
+[10:33] CHECK: Perimeter sensors - NORMAL
+[11:02] AUTH: Field Agent login - GRANTED</pre>
+                        </div>
+                    </div>
+                    
+                    <div class="error">Invalid code. Access denied.</div>
+                    
+                    <div class="card">
+                        <h3>🔐 Clearance Verification</h3>
+                        <p>Enter the artifact access code from inventory to proceed:</p>
+                        <form method="GET" action="/security">
+                            <input type="text" name="code" placeholder="Enter code" maxlength="10" style="width: 200px;">
+                            <button type="submit" style="width: auto; padding: 12px 30px; margin-left: 10px;">Verify</button>
+                        </form>
+                    </div>
+                    ''')
+                    response = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n" + html
+                else:
+                    html = security_page()
+                    response = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n" + html
+            
             elif path == '/status':
                 html = status_page()
                 response = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n" + html
             
-            elif path == '/reset':
-                await reset_room()
-                html = base_page("Reset", '''
-                    <h2>🔄 Room Reset</h2>
-                    <p style="color: green;">All systems have been reset to initial state.</p>
-                    <a href="/">Return to Dashboard</a>
-                ''')
-                response = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n" + html
-            
-            elif path == '/vault' and puzzle_state['security_cleared'] and not puzzle_state['vault_unlocked']:
-                await vault_unlock()
-                html = base_page("Vault", '''
-                    <h2 style="color: #4caf50;">🔓 VAULT UNLOCKED</h2>
+            elif path == '/vault':
+                if not puzzle_state['logged_in']:
+                    response = "HTTP/1.0 302 Found\r\nLocation: /\r\n\r\n"
+                elif puzzle_state['security_cleared'] and not puzzle_state['vault_unlocked']:
+                    # Unlock the vault!
+                    await vault_unlock()
+                    puzzle_state['vault_unlocked'] = True
+                    html = base_page("Vault Unlocked", '''
+                    <h2>🔓 VAULT UNLOCKED</h2>
+                    
+                    <div style="text-align: center; padding: 40px;">
+                        <div style="font-size: 72px; margin-bottom: 20px;">🔓</div>
+                        <h2 style="color: #4caf50; font-size: 32px;">ACCESS GRANTED</h2>
+                        <p style="font-size: 18px; margin: 20px 0;">The secure compartment has been unlocked.</p>
+                        <p style="font-family: monospace; background: #1a1a1a; color: #00ff00; padding: 20px; border-radius: 5px; display: inline-block;">
+                            GPIO TRIGGER: ACTIVATED<br>
+                            RELAY: ENGAGED<br>
+                            MAGLOCK: RELEASED
+                        </p>
+                    </div>
+                    
+                    <div class="card" style="border-left-color: #4caf50;">
+                        <h3>🎯 Mission Status: COMPLETE</h3>
+                        <p>You have successfully bypassed security and unlocked the vault.</p>
+                        <p>The artifact is now accessible. Physical lock has been disengaged.</p>
+                    </div>
+                    ''')
+                    response = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n" + html
+                elif puzzle_state['vault_unlocked']:
+                    html = base_page("Vault Unlocked", '''
+                    <h2>🔓 VAULT UNLOCKED</h2>
                     <p>Access granted. Physical maglocks have been released.</p>
-                ''')
-                response = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n" + html
+                    ''')
+                    response = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n" + html
+                else:
+                    html = security_page()
+                    response = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n" + html
             
             else:
                 response = "HTTP/1.0 404 Not Found\r\n\r\nNot found"
