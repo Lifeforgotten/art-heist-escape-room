@@ -5,7 +5,7 @@ import uasyncio as asyncio
 
 # 4 Touch sensors (using safe pins)
 DRY_RUN = True  # Set False to enable outputs
-TOUCH_PINS = [4, 27, 14, 13]  # remapped touch pins: keep 4 and 27, avoid ADC pins 32/33; 14 & 13 chosen (check boot strapping and board-specific touch mapping)
+TOUCH_PINS = [4, 27, 14]  # 3 touch pins: T0, T1, T2 (T3 removed for now until puzzle logic defined)
 touch_sensors = [TouchPad(Pin(p)) for p in TOUCH_PINS]
 
 # Setup outputs
@@ -102,8 +102,7 @@ async def touch_loop():
                 elif i == 2:
                     asyncio.create_task(trigger_strip((0, 0, 255)))
                     asyncio.create_task(trigger_grid((255, 255, 0)))
-                elif i == 3:
-                    asyncio.create_task(trigger_both())
+                # T3 removed until puzzle logic defined
 
         await asyncio.sleep_ms(50)  # cooperative yield
 
